@@ -1,13 +1,8 @@
 const fs = require("node:fs").promises;
 const path = require("node:path");
-
-/*
- * Skomentuj i zapisz wartość
- * const contactsPath = ;
- */
+const { nanoid } = require("nanoid");
 
 const contactsPath = "./db/contacts.json";
-// TODO: udokumentuj każdą funkcję
 function listContacts() {
   const file = fs.readFile(path.resolve(contactsPath));
   file.then((content) => {
@@ -31,14 +26,31 @@ function removeContact(contactId) {
     const fileStr = content.toString();
     const result = JSON.parse(fileStr);
     const afterDelete = result.filter((contact) => contact.id !== contactId);
-    fs.writeFile(path.resolve(contactsPath), JSON.stringify(afterDelete)).then(() => {
+    fs.writeFile(path.resolve(contactsPath), JSON.stringify(afterDelete)).then(
+      () => {
         console.log("Zapis do pliku zakończony powodzeniem.".green);
-    })
+      }
+    );
   });
 }
 
 function addContact(name, email, phone) {
-  // ...twój kod
+  const file = fs.readFile(path.resolve(contactsPath));
+  file.then((content) => {
+    const fileStr = content.toString();
+    const result = JSON.parse(fileStr);
+    result.push({
+      id: nanoid(21),
+      name,
+      email,
+      phone,
+    });
+    fs.writeFile(path.resolve(contactsPath), JSON.stringify(result)).then(
+      () => {
+        console.log("Zapis do pliku zakończony powodzeniem.".green);
+      }
+    );
+  });
 }
 
 module.exports = {
