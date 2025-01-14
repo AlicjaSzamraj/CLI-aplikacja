@@ -30,7 +30,10 @@ function removeContact(contactId) {
   file.then((content) => {
     const fileStr = content.toString();
     const result = JSON.parse(fileStr);
-    console.table(result.find((contact) => contact.id == contactId));
+    const afterDelete = result.filter((contact) => contact.id !== contactId);
+    fs.writeFile(path.resolve(contactsPath), JSON.stringify(afterDelete)).then(() => {
+        console.log("Zapis do pliku zakończony powodzeniem.".green);
+    })
   });
 }
 
